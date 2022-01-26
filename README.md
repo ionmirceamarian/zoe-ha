@@ -3,6 +3,8 @@ Setting up ZOE and Home Assistant
 
 Most of the code comments and variables are in RO language so not much help there
 
+Prerequisites: Home Assistant (docker) with sqlite.
+
 What get_data_new.py does is:
  - creates a basic json reponse (is a string but parsed as json by HA)
  - checks whether you are charging at home or not and increments accordingly
