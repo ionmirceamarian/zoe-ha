@@ -91,8 +91,8 @@ first = int(date_batierie[0][1])
 consum = 0
 # Cat am consumat?
 for x,y in date_batierie:
-    if(first < int(y)):
-        consum +=  int(y) - first
+    if(first > int(y)):
+        consum +=   first - int(y)
         first = int(y)
     else:
         first = int(y)
