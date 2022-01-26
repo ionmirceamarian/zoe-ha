@@ -1,0 +1,9 @@
+start_hvac:
+  alias: Start HVAC
+  sequence:
+  - service: renault.ac_start
+    data:
+      vin: VFxxxxxxxxx # add your onw vin here
+      temperature: 32 # this will request precondition to start and the expepected interior temp will be 32 (this is the maximum you can request)
+  mode: single
+  icon: mdi:snowflake

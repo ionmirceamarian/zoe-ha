@@ -1,0 +1,111 @@
+
+# Configure a default setup of Home Assistant (frontend, api, etc)
+default_config:
+
+frontend:    
+  themes: !include_dir_merge_named themes
+
+################################################
+# Zoe HVAC Start 32 grade                      #
+################################################
+
+# logger:
+#   default: error
+#   logs:
+#     renault_api: debug
+#     custom_components.renault: debug
+
+# Scripts
+script: !include scripts.yaml
+
+# Switches
+switch:
+  - platform: template
+    switches:
+      # Start AC now for five minutes (see script)
+      zoe_ac_start:
+        friendly_name: "A/C"
+        icon_template: mdi:fan
+        value_template: "{{ is_state('script.start_hvac', 'on') }}"
+        turn_on:
+          service: homeassistant.turn_on
+          data:
+            entity_id: script.start_hvac
+        turn_off:
+          service: homeassistant.turn_off
+          data:
+            entity_id: script.start_hvac
+
+################################################
+# Keep stuff longer                            #
+################################################
+
+recorder:
+  purge_keep_days: 999
+  include:
+    entities:
+      - sensor.battery_autonomy
+      - sensor.battery_level
+      - device_tracker.location
+      - sensor.mileage
+      - sensor.car_data_7
+
+################################################
+# Stop Keep stuff longer                       #
+################################################
+
+################################################
+# Adding Calculated Data                       #
+################################################
+
+sensor:
+  - platform: command_line
+    scan_interval : 3600
+    command_timeout : 60
+    name: car_data_7
+    json_attributes:
+      - kw_7
+      - bani_7
+      - kw_deplasare_7
+      - km_parcursi_7
+      - consum_kw_7
+      - consum_kw_km_7
+    command: " python3 get_data_new.py --dbfile='home-assistant_v2.db' --days=7 "
+    value_template: "{{ value_json }}"
+
+  - platform: command_line
+    scan_interval : 3600
+    command_timeout : 60
+    name: car_data_30
+    json_attributes:
+      - kw_30 
+      - bani_30
+      - kw_deplasare_30
+      - km_parcursi_30
+      - consum_kw_30
+      - consum_kw_km_30
+    command: " python3 get_data_new.py --dbfile='home-assistant_v2.db' --days=30 "
+    value_template: "{{ value_json }}"
+
+
+  - platform: command_line
+    scan_interval : 3600
+    command_timeout : 60
+    name: car_data_999
+    json_attributes:
+      - kw_999
+      - bani_999
+      - kw_deplasare_999
+      - km_parcursi_999
+      - consum_kw_999
+      - consum_kw_km_999
+    command: " python3 get_data_new.py --dbfile='home-assistant_v2.db' --days=999 "
+    value_template: "{{ value_json }}"
+
+
+
+
+
+################################################
+# Stop Adding Calculated Data                  #
+################################################
